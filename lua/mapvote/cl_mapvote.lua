@@ -128,11 +128,22 @@ function PANEL:Init()
         derma.SkinHook("Paint", "WindowMinimizeButton", panel, w, h)
     end
 
-	if CodeRage then
-		self.tasksModule = CodeRage.moduleManager:GetByIdentifier("CodeRageTasks")
-		self.tasksIcon = "icon16/report.png"
-		self.tasksIconGap = 8
-	end
+	self.iconGap = 8
+
+	self.mapIcons = {
+		{
+			tooltip = "This map has tasks.",
+			icon = "icon16/report.png",
+			condition = function(map)
+				if CodeRage then
+					local module = CodeRage.moduleManager:GetByIdentifier("CodeRageTasks")
+					if module.taskMaps[map] then return true end
+				end
+
+				return false
+			end
+		}
+	}
 
     self.Voters = {}
 end
@@ -287,16 +298,19 @@ function PANEL:SetMaps(maps)
         button:SetTextInset(8, 0)
         button:SetFont("RAM_VoteFont")
 
-		if self.tasksModule and self.tasksModule.taskMaps[button:GetText()] then
-			surface.SetFont(button:GetFont())
-			local x = surface.GetTextSize(button:GetText()) + select(1, button:GetTextInset())
-			print("hello")
+		button.icons = {}
 
-			button.tasksIcon = vgui.Create("DImageButton", button)
-			button.tasksIcon:SetSize(16, 16)
-			button.tasksIcon:SetImage(self.tasksIcon)
-			button.tasksIcon:SetPos(x + self.tasksIconGap, button:GetTall() / 2 - button.tasksIcon:GetTall() / 2)
-			button.tasksIcon:SetTooltip("This map has tasks.")
+		for index, info in ipairs(self.mapIcons) do
+			if info.condition(button:GetText()) then
+				surface.SetFont(button:GetFont())
+				local x = surface.GetTextSize(button:GetText()) + select(1, button:GetTextInset())
+
+				button.icons[index] = vgui.Create("DImageButton", button)
+				button.icons[index]:SetSize(16, 16)
+				button.icons[index]:SetImage(info.icon)
+				button.icons[index]:SetPos(x + self.iconGap * index + button.icons[index]:GetWide() * (index - 1), button:GetTall() / 2 - button.icons[index]:GetTall() / 2)
+				button.icons[index]:SetTooltip(info.tooltip)
+			end
 		end
 
         local extra = math.Clamp(300, 0, ScrW() - 640)

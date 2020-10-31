@@ -1,0 +1,15 @@
+stages:
+  - push
+
+push:
+  stage: push
+  image: debian:stable
+  before_script:
+    - apt-get update -y --allow-unauthenticated
+    - apt-get install -y git git-ftp --allow-unauthenticated
+
+    - git config git-ftp.url "sftp://$FTP_URL/$FTP_PATH/code-rage-mapvote/"
+    - git config git-ftp.user "$FTP_USER"
+    - git config git-ftp.password "$FTP_PASSWORD"
+  script:
+   - git ftp push -v

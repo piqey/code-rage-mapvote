@@ -12,4 +12,4 @@ push:
     - git config git-ftp.user "$FTP_USER"
     - git config git-ftp.password "$FTP_PASSWORD"
   script:
-   - git ftp push -v --insecure
+   - git ftp catchup -v --insecure

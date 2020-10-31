@@ -12,5 +12,4 @@ push:
     - git config git-ftp.user "$FTP_USER"
     - git config git-ftp.password "$FTP_PASSWORD"
   script:
-   - git ftp init --insecure
    - git ftp push -v --insecure

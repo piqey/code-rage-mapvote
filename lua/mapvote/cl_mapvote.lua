@@ -131,6 +131,7 @@ function PANEL:Init()
 	self.iconGap = 8
 
 	self.mapIcons = {
+		--[[
 		{
 			tooltip = "This map has tasks.",
 			icon = "icon16/report.png",
@@ -143,6 +144,7 @@ function PANEL:Init()
 				return false
 			end
 		}
+		--]]
 	}
 
     self.Voters = {}
